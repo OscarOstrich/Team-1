@@ -49,7 +49,7 @@ This work uses multiple python scripts to organize and utilize the data collecte
 3. Residual Correction Models
    - XGBoost
    - Random Forest
-   - Normal
+   - Normalizing Flows
   
 4. Direct Prediction Models
    - XGBoost
