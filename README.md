@@ -56,3 +56,6 @@ This work uses multiple python scripts to organize and utilize the data collecte
    - Random Forest
    - Normalizing Flows
   
+# Running Code
+
+Each folder in this github (other than output) will have a README.md for referencing running the important code. Originally, all of this code was run on a high performance computing system courtesy of UMBC, and so it might take longer or be more difficult to run without CPU delegation. The slurm jobs were made in order to batch and log on the system, and some of the python files are accompanied with these slurm files, and they are not to be used unless you are running it on a server that uses slurm for managing jobs. Regardless, they can all be run with Python 3 and are executable files.  
