@@ -36,22 +36,22 @@ This work is supported by the grant "REU Site: Online Interdisciplinary Big Data
 
 This work uses multiple python scripts to organize and utilize the data collected from TEMPO and CAMS datasets for machine learning and direct prediction No2 forecasting. The below list is to show the pipeline for reproducibility and navigation of this repo. 
 
-1. Downloading
+1. [Downloading](Team-1/downloading/README.md)
    - CAMS
    - Aurora
    - TEMPO
   
-2. Preprocessing
+2. [Preprocessing](Team-1/preprocessing/README.md)
    - Filtering
    - Forecast
    - Organize
   
-3. Residual Correction Models
+3. [Residual Correction Models](Team-1/rcm_code/README.md)
    - XGBoost
    - Random Forest
    - Normalizing Flows
   
-4. Direct Prediction Models
+4. [Direct Prediction Models](Team-1/dpm_code/README.md)
    - XGBoost
    - Random Forest
    - Normalizing Flows
