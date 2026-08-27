@@ -1,51 +1,23 @@
 #https://microsoft.github.io/aurora/example_cams.html
 #Title python file: savingauroraday1.py
-
 import datetime
 import time
-
-
-
 import sys
 import aurora
 print("Python Executable:", sys.executable)
 print("Aurora Source Path:", aurora.__file__)
 print("Available names inside this module:", dir(aurora))
-
-
-
-
-
-
-
-
 import zipfile
 from pathlib import Path
-
-
-
-
 import cdsapi
 from huggingface_hub import hf_hub_download
-
 import pickle
-
-
-
-
 import torch
 import xarray as xr
-
-
-
-
 from aurora import Batch, Metadata
-
-
 from aurora import rollout
 
-
-# Data will be downloaded here.
+# Data will be downloaded here. Set to proper directory for running on your own
 #download_path = Path("~/downloads/cams")
 download_path = Path("/umbc/rs/cybertrn/reu2026/team1/research/data/cams")
 
@@ -57,42 +29,22 @@ download_path.mkdir(parents=True, exist_ok=True)
 # Set to `False` to run locally and to `True` to run on Foundry.
 run_on_foundry = False
 
-
-
-
 if not run_on_foundry:
     from aurora import AuroraAirPollution, rollout
-
-
-
-
+    
     model = AuroraAirPollution()
     model.load_checkpoint("microsoft/aurora", "aurora-0.4-air-pollution.ckpt")
-
-
-
-
     model.eval()
     model = model.to("cuda")
-
 #    with torch.inference_mode():
 #        predictions = [pred.to("cpu") for pred in rollout(model, batch, steps=730)]
-
-
-
-
 #    model = model.to("cpu")
-
-
-
 
 if run_on_foundry:
     import logging
     import os
     import warnings
-
     from aurora.foundry import BlobStorageChannel, FoundryClient, submit
-
 
     # In this demo, we silence all warnings.
     warnings.filterwarnings("ignore")
@@ -100,16 +52,11 @@ if run_on_foundry:
     # But we do want to show what's happening under the hood!
     logging.basicConfig(level=logging.WARNING, format="%(asctime)s [%(levelname)s] %(message)s")
     logging.getLogger("aurora").setLevel(logging.INFO)
-
-
-
-
     foundry_client = FoundryClient(
         endpoint=os.environ["FOUNDRY_ENDPOINT"],
         token=os.environ["FOUNDRY_TOKEN"],
     )
     channel = BlobStorageChannel(os.environ["BLOB_URL_WITH_SAS"])
-
 
 # Download the static variables from HuggingFace.
 static_path = hf_hub_download(
@@ -192,42 +139,18 @@ for i in range(365):
         ) as f:
             f.write(zf.read("data_plev.nc"))
     print("Surface-level and atmospheric variables downloaded!")
-
-
-
-
-
-
-
-
-
-
-
     with open(static_path, "rb") as f:
         static_vars = pickle.load(f)
     surf_vars_ds = xr.open_dataset(
-        download_path / f"{date.strftime('%Y-%m-%d')}-cams-surface-level.nc", engine="netcdf4", decode_timedelta=True
-    )
+        download_path / f"{date.strftime('%Y-%m-%d')}-cams-surface-level.nc", engine="netcdf4", decode_timedelta=True)
     atmos_vars_ds = xr.open_dataset(
-        download_path / f"{date.strftime('%Y-%m-%d')}-cams-atmospheric.nc", engine="netcdf4", decode_timedelta=True
-    )
-
-
-
-
+        download_path / f"{date.strftime('%Y-%m-%d')}-cams-atmospheric.nc", engine="netcdf4", decode_timedelta=True)
     # Select the zero-hour forecast to get the analysis product.
     surf_vars_ds = surf_vars_ds.isel(forecast_period=0)
     atmos_vars_ds = atmos_vars_ds.isel(forecast_period=0)
 
-
-
-
     # The file has two time points: UTC 00 and UTC 12. We use both to construct the batch
     # with time 2023-07-24 UTC 12.
-
-
-
-
     batch = Batch(
         surf_vars={
             # `[None]` inserts a batch dimension of size one.
@@ -281,11 +204,6 @@ for i in range(365):
 #        )
 #    )
 
-
-
-
-
-
     import matplotlib.pyplot as plt
 
 
@@ -329,7 +247,6 @@ for i in range(365):
             pred.to_netcdf(dir / filename)
 
             del pred
-
 
     print(f"Successfully saved the Aurora prediction files for {date.strftime('%Y-%m-%d')}.")
     date += datetime.timedelta(days=1)
