@@ -31,27 +31,28 @@ Accurate nitrogen dioxide (NO2) forecasting is critical for air quality manageme
  
 This work is supported by the grant "REU Site: Online Interdisciplinary Big Data Analytics in Science and Engineering" from the National Science Foundation (grant no. OAC-2348755). We acknowledge the computational resources in the UMBC High Performance Computing Facility (hpcf.umbc.edu) and the financial contributions from NIH, NSF, CIRC, and UMBC for this work.
 
+[XGBoost Visualization Map](output/xgb_dpm_t1_2025-05-25.png)
 
 # Code Pipeline
 
 This work uses multiple python scripts to organize and utilize the data collected from TEMPO and CAMS datasets for machine learning and direct prediction No2 forecasting. The below list is to show the pipeline for reproducibility and navigation of this repo. 
 
-1. [Downloading](Team-1/downloading/README.md)
+1. [Downloading](downloading/README.md)
    - CAMS
    - Aurora
    - TEMPO
   
-2. [Preprocessing](Team-1/preprocessing/README.md)
+2. [Preprocessing](preprocessing/README.md)
    - Filtering
    - Forecast
    - Organize
   
-3. [Residual Correction Models](Team-1/rcm_code/README.md)
+3. [Residual Correction Models](rcm_code/README.md)
    - XGBoost
    - Random Forest
    - Normalizing Flows
   
-4. [Direct Prediction Models](Team-1/dpm_code/README.md)
+4. [Direct Prediction Models](dpm_code/README.md)
    - XGBoost
    - Random Forest
    - Normalizing Flows
