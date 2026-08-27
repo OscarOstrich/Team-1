@@ -1,91 +1,41 @@
-#I may need to download the data first
 #https://microsoft.github.io/aurora/example_cams.html
-#Title python file: runningauroratest.py
-
+#Title python file: savingauroraday2.py
 import datetime
 import time
-
-
-
 import sys
 import aurora
 print("Python Executable:", sys.executable)
 print("Aurora Source Path:", aurora.__file__)
 print("Available names inside this module:", dir(aurora))
-
-
-
-
-
-
-
-
 import zipfile
 from pathlib import Path
-
-
-
-
 import cdsapi
 from huggingface_hub import hf_hub_download
-
 import pickle
-
-
-
-
 import torch
 import xarray as xr
-
-
-
-
 from aurora import Batch, Metadata
-
-
 from aurora import rollout
-
 
 # Data will be downloaded here.
 #download_path = Path("~/downloads/cams")
 download_path = Path("/umbc/rs/cybertrn/reu2026/team1/research/data/cams")
-
-
 download_path = download_path.expanduser()
 download_path.mkdir(parents=True, exist_ok=True)
-
 
 # Set to `False` to run locally and to `True` to run on Foundry.
 run_on_foundry = False
 
-
-
-
 if not run_on_foundry:
     from aurora import AuroraAirPollution, rollout
-
-
-
-
     model = AuroraAirPollution()
     model.load_checkpoint("microsoft/aurora", "aurora-0.4-air-pollution.ckpt")
-
-
-
-
     model.eval()
     model = model.to("cuda")
 
 #    with torch.inference_mode():
 #        predictions = [pred.to("cpu") for pred in rollout(model, batch, steps=730)]
-
-
-
-
 #    model = model.to("cpu")
-
-
-
 
 if run_on_foundry:
     import logging
@@ -110,7 +60,6 @@ if run_on_foundry:
         token=os.environ["FOUNDRY_TOKEN"],
     )
     channel = BlobStorageChannel(os.environ["BLOB_URL_WITH_SAS"])
-
 
 # Download the static variables from HuggingFace.
 static_path = hf_hub_download(
@@ -193,17 +142,6 @@ for i in range(365):
         ) as f:
             f.write(zf.read("data_plev.nc"))
     print("Surface-level and atmospheric variables downloaded!")
-
-
-
-
-
-
-
-
-
-
-
     with open(static_path, "rb") as f:
         static_vars = pickle.load(f)
     surf_vars_ds = xr.open_dataset(
@@ -213,22 +151,12 @@ for i in range(365):
         download_path / f"{date.strftime('%Y-%m-%d')}-cams-atmospheric.nc", engine="netcdf4", decode_timedelta=True
     )
 
-
-
-
     # Select the zero-hour forecast to get the analysis product.
     surf_vars_ds = surf_vars_ds.isel(forecast_period=0)
     atmos_vars_ds = atmos_vars_ds.isel(forecast_period=0)
-
-
-
-
+    
     # The file has two time points: UTC 00 and UTC 12. We use both to construct the batch
     # with time 2023-07-24 UTC 12.
-
-
-
-
     batch = Batch(
         surf_vars={
             # `[None]` inserts a batch dimension of size one.
@@ -268,10 +196,6 @@ for i in range(365):
         ),
     )
 
-
-
-
-
 #    predictions = list(
 #        submit(
 #            batch,
@@ -281,12 +205,7 @@ for i in range(365):
 #            channel=channel,
 #        )
 #    )
-
-
-
-
-
-
+    
     import matplotlib.pyplot as plt
 
 
@@ -304,8 +223,6 @@ for i in range(365):
 #    ax.set_title(f"TC NO${{}}_2$ {pred.metadata.time[0]}")
 #    ax.set_xticks([])
 #    ax.set_yticks([])
-
-
 
 
 #pred.to_netcdf("/umbc/rs/cybertrn/reu2026/team1/research/testing/Addy_testing/tc24predictions.nc")
