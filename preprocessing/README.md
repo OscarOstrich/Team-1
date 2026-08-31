@@ -7,10 +7,10 @@ The order of files to be run is as follows:
 1. Organize Aurora and TEMPO
    - move the forecasts and truths into their own directories for downstream analysis
   
-2. [Generate the Dataset](/gen_timeseries.py)
+2. [Generate the Dataset](/preprocessing/gen_timeseries.py)
    - create a time series data set that takes two time steps to use for horizon lead times
   
-3. [Split the Train and Test](/split_timeseries_dataset.py)
+3. [Split the Train and Test](/preprocessing/split_timeseries_dataset.py)
    - splits the generated data set into training and testing based on inputted dates
 
 
